@@ -1,0 +1,7 @@
+* Thanks for installing the kubemox!
+
+* Kubemox aims managing Proxmox resources through Kubernetes objects. 
+
+Please see the documentation on https://alperencelik.github.io/kubemox/
+
+DISCLAIMER: Kubemox is still under development so please use accordingly!
