@@ -2,6 +2,19 @@ apiVersion: v1
 entries:
   kubemox:
   - apiVersion: v2
+    appVersion: 0.1.0
+    created: "2024-06-08T17:37:23.998506688Z"
+    description: A Helm chart for Kubernetes
+    digest: a80db2efe66957e151a797db4878b47f4d142cb1e90d9a918b2b318bb68f8ef6
+    maintainers:
+    - email: celial18@itu.edu.tr
+      name: Alp Eren Celik
+    name: kubemox
+    type: application
+    urls:
+    - https://github.com/alperencelik/helm-charts/releases/download/kubemox-0.3.0/kubemox-0.3.0.tgz
+    version: 0.3.0
+  - apiVersion: v2
     appVersion: 0.0.4-rc1
     created: "2024-02-03T12:47:05.771105294Z"
     description: A Helm chart for Kubernetes
@@ -14,4 +27,4 @@ entries:
     urls:
     - https://github.com/alperencelik/helm-charts/releases/download/kubemox-0.2.1/kubemox-0.2.1.tgz
     version: 0.2.1
-generated: "2024-02-03T12:47:05.771133237Z"
+generated: "2024-06-08T17:37:23.998535192Z"
