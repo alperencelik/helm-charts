@@ -53,4 +53,15 @@ entries:
     urls:
     - https://github.com/alperencelik/helm-charts/releases/download/kubemox-0.2.1/kubemox-0.2.1.tgz
     version: 0.2.1
-generated: "2025-05-19T12:27:39.540658815Z"
+  talos-operator:
+  - apiVersion: v2
+    appVersion: 0.0.2
+    created: "2025-08-14T16:58:49.497605753Z"
+    description: A Helm chart for Kubernetes
+    digest: ba8d9e79c263142f160e63dec48a67db4db840f1a482423ee99039a2c22e320b
+    name: talos-operator
+    type: application
+    urls:
+    - https://github.com/alperencelik/helm-charts/releases/download/talos-operator-0.0.1/talos-operator-0.0.1.tgz
+    version: 0.0.1
+generated: "2025-08-14T16:58:49.497624397Z"
