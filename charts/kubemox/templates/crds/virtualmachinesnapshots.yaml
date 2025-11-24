@@ -35,7 +35,6 @@ spec:
           metadata:
             type: object
           spec:
-            description: VirtualMachineSnapshotSpec defines the desired state of VirtualMachineSnapshot
             properties:
               connectionRef:
                 description: |-
@@ -43,8 +42,12 @@ spec:
                   referenced object inside the same namespace.
                 properties:
                   name:
+                    default: ""
                     description: |-
                       Name of the referent.
+                      This field is effectively required, but due to backwards compatibility is
+                      allowed to be empty. Instances of this type with an empty value here are
+                      almost certainly wrong.
                       More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
                     type: string
                 type: object
@@ -63,8 +66,12 @@ spec:
                   Name of the virtual machine to take snapshot of
                 type: string
             required:
+            - connectionRef
             - virtualMachineName
             type: object
+            x-kubernetes-validations:
+            - message: ConnectionRef is required once set
+              rule: '!has(oldSelf.connectionRef) || has(self.connectionRef)'
           status:
             description: VirtualMachineSnapshotStatus defines the observed state of
               VirtualMachineSnapshot
