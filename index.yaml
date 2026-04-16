@@ -2,6 +2,19 @@ apiVersion: v1
 entries:
   kubemox:
   - apiVersion: v2
+    appVersion: 0.6.2
+    created: "2026-04-16T21:45:17.696838178Z"
+    description: A Helm chart for Kubernetes
+    digest: a97685b05dbcd740687fbb8dcd7d938152e65d0b56c0359fa27f45e84cadd551
+    maintainers:
+    - email: celial18@itu.edu.tr
+      name: Alp Eren Celik
+    name: kubemox
+    type: application
+    urls:
+    - https://github.com/alperencelik/helm-charts/releases/download/kubemox-0.6.2/kubemox-0.6.2.tgz
+    version: 0.6.2
+  - apiVersion: v2
     appVersion: 0.6.1
     created: "2026-04-11T21:04:34.031954043Z"
     description: A Helm chart for Kubernetes
@@ -116,4 +129,4 @@ entries:
     urls:
     - https://github.com/alperencelik/helm-charts/releases/download/talos-operator-0.0.1/talos-operator-0.0.1.tgz
     version: 0.0.1
-generated: "2026-04-11T21:04:34.032008585Z"
+generated: "2026-04-16T21:45:17.696886711Z"
