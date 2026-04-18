@@ -36,6 +36,11 @@ spec:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+          {{- if .Values.tracing.enabled }}
+          args:
+            - --enable-tracing
+            - --otlp-endpoint={{ .Values.tracing.otlpEndpoint }}
+          {{- end }}
           env:
             - name: TALOS_OPERATOR_IMAGE
               value: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
@@ -43,6 +48,11 @@ spec:
               valueFrom:
                 fieldRef:
                   fieldPath: spec.serviceAccountName
+            - name: ENABLE_META_KEY
+              value: "{{ .Values.featureFlags.enableMetaKey | default "false" }}"
+            {{- with .Values.env }}
+            {{- toYaml . | nindent 12 }}
+            {{- end }}
           ports:
             - name: http
               containerPort: {{ .Values.service.port }}
@@ -59,6 +69,9 @@ spec:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.ui.image.repository }}:{{ .Values.ui.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.ui.image.pullPolicy }}
+          env:
+            - name: UI_PORT
+              value: "{{ .Values.ui.containerPort | default "8081" }}"
           ports:
             - name: http-ui
               containerPort: {{ .Values.ui.containerPort }}

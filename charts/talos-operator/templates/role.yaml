@@ -34,8 +34,12 @@ rules:
   resources:
   - talosclusters
   - taloscontrolplanes
+  - talosetcdbackups
+  - talosetcdbackupschedules
   - talosmachines
   - talosworkers
+  - talosclusteraddons
+  - talosclusteraddonreleases
   verbs:
   - create
   - delete
@@ -49,8 +53,12 @@ rules:
   resources:
   - talosclusters/finalizers
   - taloscontrolplanes/finalizers
+  - talosetcdbackups/finalizers
+  - talosetcdbackupschedules/finalizers
   - talosmachines/finalizers
   - talosworkers/finalizers
+  - talosclusteraddons/finalizers
+  - talosclusteraddonreleases/finalizers
   verbs:
   - update
 - apiGroups:
@@ -58,8 +66,12 @@ rules:
   resources:
   - talosclusters/status
   - taloscontrolplanes/status
+  - talosetcdbackups/status
+  - talosetcdbackupschedules/status
   - talosmachines/status
   - talosworkers/status
+  - talosclusteraddons/status
+  - talosclusteraddonreleases/status
   verbs:
   - get
   - patch

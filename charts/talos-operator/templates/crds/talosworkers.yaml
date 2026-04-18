@@ -9,10 +9,25 @@ spec:
     kind: TalosWorker
     listKind: TalosWorkerList
     plural: talosworkers
+    shortNames:
+    - tw
     singular: talosworker
   scope: Namespaced
   versions:
-  - name: v1alpha1
+  - additionalPrinterColumns:
+    - jsonPath: .status.state
+      name: State
+      type: string
+    - jsonPath: .spec.version
+      name: Version
+      type: string
+    - jsonPath: .spec.mode
+      name: Mode
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
     schema:
       openAPIV3Schema:
         description: TalosWorker is the Schema for the talosworkers API.
@@ -35,11 +50,11 @@ spec:
           metadata:
             type: object
           spec:
-            description: TalosWorkerSpec defines the desired state of TalosWorker.
+            description: spec defines the desired state of TalosWorker.
             properties:
               configRef:
-                description: Reference to a ConfigMap containing the Talos cluster
-                  configuration
+                description: configRef is a reference to a ConfigMap containing the
+                  Talos cluster configuration.
                 properties:
                   key:
                     description: The key to select.
@@ -62,9 +77,8 @@ spec:
                 type: object
                 x-kubernetes-map-type: atomic
               controlPlaneRef:
-                description: ControlPlaneRef is a reference to the TalosControlPlane
-                  that this worker belongs to
-                format: objectreference
+                description: controlPlaneRef is a reference to the TalosControlPlane
+                  that this worker belongs to.
                 properties:
                   name:
                     default: ""
@@ -78,57 +92,192 @@ spec:
                 type: object
                 x-kubernetes-map-type: atomic
               kubeVersion:
-                default: v1.33.1
-                description: KubeVersion is the version of Kubernetes to use for the
-                  control plane
+                default: v1.35.0
+                description: kubeVersion is the version of Kubernetes to use for the
+                  worker nodes.
                 pattern: ^v\d+\.\d+\.\d+(-\w+)?$
                 type: string
-                x-kubernetes-validations:
-                - message: KubeVersion can not be decreased
-                  rule: self >= oldSelf
               metalSpec:
-                description: Metal Spec is required when mode is 'metal'
+                description: metalSpec is required when mode is 'metal'.
                 properties:
                   machineSpec:
-                    description: MachineSpec defines the specifications for each Talos
+                    description: machineSpec defines the specifications for each Talos
                       control plane machine.
                     properties:
+                      additionalConfig:
+                        description: |-
+                          additionalConfig is a list of additional Talos configuration documents to append to the
+                          generated config, each separated by "---". Entries are appended in order: global first,
+                          then machine-specific.
+                        items:
+                          type: object
+                          x-kubernetes-preserve-unknown-fields: true
+                        type: array
+                      airGap:
+                        default: false
+                        description: airGap indicates whether the machine is in an
+                          air-gapped environment.
+                        type: boolean
+                      allowSchedulingOnControlPlanes:
+                        default: false
+                        description: allowSchedulingOnControlPlanes indicates whether
+                          to allow scheduling workloads on control plane nodes.
+                        type: boolean
+                      configPatches:
+                        description: |-
+                          configPatches is a list of strategic merge patches applied to the generated Talos machine config.
+                          Unlike additionalConfig (which appends a separate YAML document), each patch is merged into
+                          the main machine config, allowing you to override or extend any field (e.g. machine.network).
+                        items:
+                          type: object
+                          x-kubernetes-preserve-unknown-fields: true
+                        type: array
                       image:
-                        description: Image is the Talos image to use for this machine.
+                        description: image is the Talos image to use for this machine.
                         type: string
+                      imageCache:
+                        default: false
+                        description: imageCache indicates whether to enable local
+                          image caching on the machine.
+                        type: boolean
                       installDisk:
-                        description: InstallDisk is the disk to use for installing
+                        description: installDisk is the disk to use for installing
                           Talos on the control plane machines.
-                        pattern: ^/dev/[a-z]+[0-9]*$
+                        pattern: ^/dev/(sd[a-z][0-9]*|vd[a-z][0-9]*|nvme[0-9]+n[0-9]+(p[0-9]+)?)$
                         type: string
+                      meta:
+                        description: meta is the meta partition used by Talos.
+                        properties:
+                          dnsServers:
+                            description: dnsServers is a list of DNS servers for the
+                              Talos machines.
+                            items:
+                              type: string
+                            type: array
+                          gateway:
+                            description: gateway is the gateway for the Talos machines.
+                            type: string
+                          hostname:
+                            description: hostname is the hostname for the Talos machines.
+                            type: string
+                          interface:
+                            description: interface is the network interface name for
+                              Talos machines.
+                            type: string
+                          subnet:
+                            description: subnet is the subnet prefix length for the
+                              Talos machines.
+                            type: integer
+                        type: object
+                      registries:
+                        description: registries is the path to a custom registries
+                          configuration file.
+                        type: object
+                        x-kubernetes-preserve-unknown-fields: true
                       wipe:
                         default: false
-                        description: Wipe indicates whether to wipe the disk before
+                        description: wipe indicates whether to wipe the disk before
                           installation.
                         type: boolean
                     type: object
                   machines:
-                    description: Machines is a list of machine specifications for
+                    description: machines is a list of machine specifications for
                       the Talos control plane.
                     items:
-                      type: string
+                      properties:
+                        additionalConfig:
+                          description: |-
+                            additionalConfig is machine-specific additional Talos configuration to append to the generated config.
+                            When set, it appends the root machineSpec.additionalConfig for this machine.
+                          items:
+                            type: object
+                            x-kubernetes-preserve-unknown-fields: true
+                          type: array
+                        address:
+                          description: address is the IP address of the Talos machine.
+                          pattern: ^(\d{1,3}\.){3}\d{1,3}$
+                          type: string
+                        configPatches:
+                          description: |-
+                            configPatches is a list of machine-specific config patches applied per machine.
+                            Only define the machine level configPatches here because it appended after the root machineSpec.configPatches.
+                          items:
+                            type: object
+                            x-kubernetes-preserve-unknown-fields: true
+                          type: array
+                        machineRef:
+                          description: machineRef is a reference to a Kubernetes object
+                            from which the machine IP address can be extracted.
+                          properties:
+                            apiVersion:
+                              description: API version of the referent.
+                              type: string
+                            fieldPath:
+                              description: |-
+                                If referring to a piece of an object instead of an entire object, this string
+                                should contain a valid JSON/Go field access statement, such as desiredState.manifest.containers[2].
+                                For example, if the object reference is to a container within a pod, this would take on a value like:
+                                "spec.containers{name}" (where "name" refers to the name of the container that triggered
+                                the event) or if no container name is specified "spec.containers[2]" (container with
+                                index 2 in this pod). This syntax is chosen only to have some well-defined way of
+                                referencing a part of an object.
+                              type: string
+                            kind:
+                              description: |-
+                                Kind of the referent.
+                                More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+                              type: string
+                            name:
+                              description: |-
+                                Name of the referent.
+                                More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+                              type: string
+                            namespace:
+                              description: |-
+                                Namespace of the referent.
+                                More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/
+                              type: string
+                            resourceVersion:
+                              description: |-
+                                Specific resourceVersion to which this reference is made, if any.
+                                More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#concurrency-control-and-consistency
+                              type: string
+                            uid:
+                              description: |-
+                                UID of the referent.
+                                More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#uids
+                              type: string
+                          type: object
+                          x-kubernetes-map-type: atomic
+                      type: object
+                      x-kubernetes-validations:
+                      - message: address and machineRef are mutually exclusive
+                        rule: has(self.address) != has(self.machineRef)
                     type: array
+                    x-kubernetes-list-type: atomic
                 type: object
               mode:
+                description: mode specifies the deployment mode for the worker nodes
+                  (container, metal, or cloud).
                 enum:
                 - container
                 - metal
                 - cloud
                 type: string
+              preserveMachinesOnDeletion:
+                default: false
+                description: preserveMachinesOnDeletion indicates whether worker machines
+                  should be preserved (not reset) when deleting this Kubernetes resource
+                type: boolean
               replicas:
                 default: 1
-                description: Number of control-plane machines to maintain
+                description: replicas is the number of worker machines to maintain.
+                  Only applies when mode is 'container'.
                 format: int32
-                minimum: 1
                 type: integer
               storageClassName:
-                description: StorageClassName is the name of the storage class to
-                  use for persistent volumes
+                description: storageClassName is the name of the storage class to
+                  use for persistent volumes.
                 pattern: ^[a-zA-Z0-9][-a-zA-Z0-9_.]*[a-zA-Z0-9]$
                 type: string
                 x-kubernetes-validations:
@@ -136,27 +285,28 @@ spec:
                     creation
                   rule: self == oldSelf
               version:
-                default: v1.33.1
-                description: Version of Talos to use for the control plane(controller-manager,
-                  scheduler, kube-apiserver, etcd) -- e.g "v1.33.1"
+                default: v1.12.1
+                description: version of Talos to use for the worker nodes -- e.g "v1.12.1"
                 pattern: ^v\d+\.\d+\.\d+(-\w+)?$
                 type: string
             required:
             - kubeVersion
             - mode
-            - replicas
             - version
             type: object
             x-kubernetes-validations:
+            - message: Mode is immutable
+              rule: '!has(oldSelf.mode) || self.mode == oldSelf.mode'
             - message: MetalSpec is required when mode 'metal'
               rule: self.mode!='metal' || has(self.metalSpec)
+            - message: replicas must be at least 1 when mode is 'container'
+              rule: self.mode != 'container' || self.replicas >= 1
           status:
-            description: TalosWorkerStatus defines the observed state of TalosWorker.
+            description: status defines the observed state of TalosWorker.
             properties:
               conditions:
-                description: |-
-                  INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
-                  Important: Run "make" to regenerate code after modifying this file
+                description: conditions represent the current state of the TalosWorker
+                  resource.
                 items:
                   description: Condition contains details for one aspect of the current
                     state of this API Resource.
@@ -212,10 +362,20 @@ spec:
                   - type
                   type: object
                 type: array
+                x-kubernetes-list-map-keys:
+                - type
+                x-kubernetes-list-type: map
               config:
+                description: config is the serialized Talos configuration for the
+                  worker.
                 type: string
+              imported:
+                description: imported is only valid when ReconcileMode is 'import'
+                  and indicates whether the Talos worker has been imported.
+                type: boolean
               state:
-                description: State represents the current state of the Talos worker
+                description: state represents the current state of the Talos worker
+                  (e.g., "Ready", "Provisioning", "Failed").
                 type: string
             type: object
         type: object
