@@ -133,6 +133,16 @@ entries:
     version: 0.2.1
   talos-operator:
   - apiVersion: v2
+    appVersion: 0.4.7
+    created: "2026-05-07T21:31:49.187398879Z"
+    description: A Helm chart for Kubernetes
+    digest: b7bda4f3632c079c1fbd4579764fdf8d16607bd0e26448074a67cb12018f39bf
+    name: talos-operator
+    type: application
+    urls:
+    - https://github.com/alperencelik/helm-charts/releases/download/talos-operator-0.4.7/talos-operator-0.4.7.tgz
+    version: 0.4.7
+  - apiVersion: v2
     appVersion: 0.4.6
     created: "2026-04-29T19:13:26.26117339Z"
     description: A Helm chart for Kubernetes
@@ -162,4 +172,4 @@ entries:
     urls:
     - https://github.com/alperencelik/helm-charts/releases/download/talos-operator-0.0.1/talos-operator-0.0.1.tgz
     version: 0.0.1
-generated: "2026-04-29T19:13:26.261208192Z"
+generated: "2026-05-07T21:31:49.187440679Z"
