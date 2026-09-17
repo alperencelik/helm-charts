@@ -157,26 +157,6 @@ entries:
     urls:
     - https://github.com/alperencelik/helm-charts/releases/download/kubemox-0.2.1/kubemox-0.2.1.tgz
     version: 0.2.1
-  oxide-operator:
-  - apiVersion: v2
-    appVersion: 0.0.3
-    created: "2026-09-17T20:03:51.73582514Z"
-    description: A Kubernetes operator for Oxide racks
-    digest: 8a400d18aba59df65f8d4de36e5c1bcbe50ff9c9a1ce541469ba493038cdbd62
-    home: https://github.com/alperencelik/oxide-operator
-    keywords:
-    - oxide
-    - operator
-    maintainers:
-    - name: alperencelik
-      url: https://github.com/alperencelik
-    name: oxide-operator
-    sources:
-    - https://github.com/alperencelik/oxide-operator
-    type: application
-    urls:
-    - https://github.com/alperencelik/helm-charts/releases/download/oxide-operator-0.0.3/oxide-operator-0.0.3.tgz
-    version: 0.0.3
   talos-operator:
   - apiVersion: v2
     appVersion: 0.6.1
