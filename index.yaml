@@ -172,6 +172,28 @@ entries:
     version: 0.2.1
   talos-operator:
   - apiVersion: v2
+    appVersion: 0.7.0
+    created: "2026-11-04T22:42:49.414892487Z"
+    description: Helm chart for the Talos Operator — declaratively manage Talos Linux
+      clusters from Kubernetes.
+    digest: 81f5c85161c63442706f4068b3fc6ad02fec2ec682ee06bcda98eb0114944bd1
+    home: https://github.com/alperencelik/talos-operator
+    keywords:
+    - talos
+    - kubernetes
+    - operator
+    - cluster
+    maintainers:
+    - name: alperencelik
+      url: https://github.com/alperencelik
+    name: talos-operator
+    sources:
+    - https://github.com/alperencelik/talos-operator
+    type: application
+    urls:
+    - https://github.com/alperencelik/helm-charts/releases/download/talos-operator-0.7.0/talos-operator-0.7.0.tgz
+    version: 0.7.0
+  - apiVersion: v2
     appVersion: 0.6.1
     created: "2026-07-18T08:27:12.346909334Z"
     description: Helm chart for the Talos Operator — declaratively manage Talos Linux
@@ -317,4 +339,4 @@ entries:
     urls:
     - https://github.com/alperencelik/helm-charts/releases/download/talos-operator-0.0.1/talos-operator-0.0.1.tgz
     version: 0.0.1
-generated: "2026-10-01T21:26:59.774091Z"
+generated: "2026-11-04T22:42:49.414943333Z"
